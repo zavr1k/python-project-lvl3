@@ -13,7 +13,7 @@ test: lint
 coverage:
 		poetry run coverage run --source=page_loader -m pytest tests
 		poetry run coverage xml
-push: tests
+push: test
 		git push
 
 .PHONY: install, package-install, package-uninstall, lint, build
