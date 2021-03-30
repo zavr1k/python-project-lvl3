@@ -1,19 +1,25 @@
-import requests
-import re
-import os.path
+from page_loader.storage import save_html_page, \
+    download_files, create_directory
+from page_loader.request import perform_request
+from page_loader.page_processor import process_page
 
 
-def get_full_name(url: str, directory: str) -> str:
-    without_schema = re.sub(r'http[s]?://', '', url)
-    words = list(re.sub(r'[\W_]', ' ', without_schema).rstrip().split(' '))
-    file_name = f"{'-'.join(words)}.html"
-    full_path = os.path.join(directory, file_name)
-    return full_path
+def download(url: str, destination: str) -> str:
+    html_page_data = perform_request(url).text
+
+    modified_page, full_page_name, file_folder_name, files_to_download \
+        = process_page(html_page_data, url, destination)
+
+    create_directory(file_folder_name)
+    download_files(files_to_download)
+    save_html_page(modified_page, full_page_name)
+
+    return full_page_name
 
 
-def download(url: str, name_dir: str) -> str:
-    r = requests.get(url)
-    file_name = get_full_name(url, name_dir)
-    with open(file_name, 'w') as file:
-        file.write(r.text)
-    return file_name
+# URL = 'https://ekobeton35.ru/'
+# URL = 'https://bravobeton.com'
+# URL = 'https://ru.hexlet.io/'
+# URL = 'https://wiki.manjaro.org/index.php/Main_Page'
+#
+# download(URL, '/home/santon')
