@@ -1,5 +1,4 @@
 from page_loader.request import perform_request
-from requests.exceptions import InvalidSchema, MissingSchema
 import os
 
 
