@@ -5,9 +5,14 @@ import os
 
 def download_files(files: list[tuple]):
     for file in files:
+        response = perform_request(file[0])
+        if response.encoding == 'utf-8':
+            mode = 'w'
+        else:
+            mode = 'wb'
         try:
-            with open(file[1], 'wb') as f:
-                f.write(perform_request(file[0]).content)
+            with open(file[1], mode) as f:
+                f.write(response.content)
         except (InvalidSchema, MissingSchema):
             pass
 

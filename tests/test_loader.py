@@ -33,20 +33,27 @@ def test_page_processor():
     assert page_name == f'{destination}/some-ru-site.html'
     assert file_folder_name == f'{destination}/some-ru-site_files'
     for link, local_link in resources:
-        assert link == 'assets/img.png'
+        assert link == f'{HOST}/assets/img.png'
         assert local_link == f'{destination}' \
                              f'/some-ru-site_files/assets-img.png'
         assert modified_page == _read_file(FIXTURE_FOLDER,
                                            'expected_web_page.html')
-        print(resources)
 
 
 def test_loader():
-    url = f'{HOST}/site'
+    url = f'{HOST}'
+    img_url = f'{HOST}/assets/img.png'
+
+    data = _read_file(FIXTURE_FOLDER, 'web_page.html')
+    img_data = _read_file(FIXTURE_FOLDER, 'assets/img.png', mode='rb')
+
     with requests_mock.Mocker() as mock:
-        mock.get(url, text=_read_file(os.path.join(FIXTURE_FOLDER,
-                                                   'web_page.html')))
+        mock.get(url, text=data)
+        mock.get(img_url, content=img_data)
         with tempfile.TemporaryDirectory() as tempdir:
             file_path = download(url, tempdir)
-            assert 'some-ru-site.html' == file_path.split('/')[-1]
-            assert os.access(file_path, os.R_OK)
+
+            file_folder = os.path.join(tempdir, 'some-ru_files')
+            assert file_path.split('/')[-1] == 'some-ru.html'
+            assert _read_file(file_folder, 'assets-img.png', mode='rb') == \
+                   img_data

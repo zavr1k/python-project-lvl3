@@ -49,7 +49,7 @@ def _sanitize_string(string):
 
 def _filter_by_elements(soup, resources_attributes_map):
     return soup.find_all(
-        lambda element: element.name in resources_attributes_map and element.get(
-            resources_attributes_map[element.name]
-        )
+        lambda element:
+        element.name in resources_attributes_map and element.get(
+            resources_attributes_map[element.name])
     )
