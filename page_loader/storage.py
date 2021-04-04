@@ -10,11 +10,8 @@ def download_files(files: list[tuple]):
             mode = 'w'
         else:
             mode = 'wb'
-        try:
-            with open(file[1], mode) as f:
-                f.write(response.content)
-        except (InvalidSchema, MissingSchema):
-            pass
+        with open(file[1], mode) as f:
+            f.write(response.content)
 
 
 def save_html_page(data, page_name):
