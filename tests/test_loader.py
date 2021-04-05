@@ -43,13 +43,20 @@ def test_page_processor():
 def test_loader():
     url = f'{HOST}'
     img_url = f'{HOST}/assets/img.png'
+    css_url = f'{HOST}/assets/application.css'
+    js_url = f'{HOST}/assets/runtime.js'
 
     data = _read_file(FIXTURE_FOLDER, 'web_page.html')
     img_data = _read_file(FIXTURE_FOLDER, 'assets/img.png', mode='rb')
+    css_data = _read_file(FIXTURE_FOLDER, 'assets/application.css', mode='r')
+    js_data = _read_file(FIXTURE_FOLDER, 'assets/runtime.js', mode='r')
 
     with requests_mock.Mocker() as mock:
         mock.get(url, text=data)
         mock.get(img_url, content=img_data)
+        mock.get(css_url, text=css_data)
+        mock.get(js_url, text=js_data)
+
         with tempfile.TemporaryDirectory() as tempdir:
             file_path = download(url, tempdir)
 
@@ -57,3 +64,7 @@ def test_loader():
             assert file_path.split('/')[-1] == 'some-ru.html'
             assert _read_file(file_folder, 'assets-img.png', mode='rb') == \
                    img_data
+            assert _read_file(
+                file_folder, 'assets-application.css', mode='r') == css_data
+            assert _read_file(file_folder, 'assets-runtime.js', mode='r') == \
+                   js_data
