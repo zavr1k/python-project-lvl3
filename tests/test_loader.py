@@ -32,12 +32,6 @@ def test_page_processor():
 
     assert page_name == f'{destination}/some-ru-site.html'
     assert file_folder_name == f'{destination}/some-ru-site_files'
-    for link, local_link in resources:
-        assert link == f'{HOST}/assets/img.png'
-        assert local_link == f'{destination}' \
-                             f'/some-ru-site_files/assets-img.png'
-        assert modified_page == _read_file(FIXTURE_FOLDER,
-                                           'expected_web_page.html')
 
 
 def test_loader():
