@@ -7,10 +7,12 @@ def download_files(files: list[tuple]):
         response = perform_request(file[0])
         if response.encoding == 'utf-8':
             mode = 'w'
+            resource_data = response.text
         else:
             mode = 'wb'
+            resource_data = response.content
         with open(file[1], mode) as f:
-            f.write(response.content)
+            f.write(resource_data)
 
 
 def save_html_page(data, page_name):

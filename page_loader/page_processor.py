@@ -4,7 +4,9 @@ import re
 from os import path
 
 RESOURCE_ELEMENTS_ATTRIBUTES_MAP = {
-    'img': 'src'
+    'img': 'src',
+    'link': 'href',
+    'script': 'src'
 }
 
 
@@ -21,20 +23,37 @@ def process_page(html, url, destination):
 
     soup = BeautifulSoup(html, 'html.parser')
 
-    img_tags = _filter_by_elements(soup, RESOURCE_ELEMENTS_ATTRIBUTES_MAP)
-    for tag in img_tags:
-        source_link = tag.get(RESOURCE_ELEMENTS_ATTRIBUTES_MAP[tag.name])
-        absolute_source_link = urljoin(url, source_link)
-        parsed_source_link = urlparse(absolute_source_link)
-        link_path, extension = path.splitext(f'{parsed_source_link.path}')
+    resources_to_download = _retrieve_elements(
+        url,
+        soup,
+        RESOURCE_ELEMENTS_ATTRIBUTES_MAP
+    )
+    for element in resources_to_download:
+        source = RESOURCE_ELEMENTS_ATTRIBUTES_MAP[element.name]
+        source_link = element.get(source)
+        absolut_source_link = urljoin(url, source_link)
+        link_path, extension = path.splitext(
+            f'{urlparse(absolut_source_link).path}')
         local_link = f'{file_folder_name}/' \
-                     f'{_sanitize_string(_cut_string(link_path))}{extension}'
-        tag.attrs['src'] = local_link
-        resources.append((absolute_source_link, local_link))
+                     f'{_sanitize_string(_cut_string(link_path))}' \
+                     f'{extension}'
+        element.attrs[source] = local_link
+        resources.append((absolut_source_link, local_link))
 
     modified_page = soup.prettify(formatter='html5')
 
     return modified_page, full_page_name, file_folder_name, resources
+
+
+def _retrieve_elements(page_url, soup, resources_to_retrieve):
+    resources_to_download = []
+    for element in _filter_by_elements(soup, resources_to_retrieve):
+        source_link = \
+            element.get(RESOURCE_ELEMENTS_ATTRIBUTES_MAP[element.name])
+        absolute_source_link = urljoin(page_url, source_link)
+        if urlparse(page_url).netloc == urlparse(absolute_source_link).netloc:
+            resources_to_download.append(element)
+    return resources_to_download
 
 
 def _cut_string(string):
