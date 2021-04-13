@@ -6,3 +6,4 @@ dist/
 htmlcov/
 .coverage
 coverage.xml
+debug.log
