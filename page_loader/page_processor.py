@@ -10,24 +10,25 @@ RESOURCE_ELEMENTS_ATTRIBUTES_MAP = {
     'script': 'src'
 }
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
-
-file_handler = logging.FileHandler('debug.log')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-
 
 def process_page(html, url, destination):
+    logging.debug('Start page process url - %s, destination - %s',
+                  url, destination)
+
     parsed_url = urlparse(url)
     url_without_scheme = f'{parsed_url.netloc}{parsed_url.path}'
-
     sanitized_name = _sanitize_string(url_without_scheme)
     page_name = f'{sanitized_name}.html'
-    full_page_name = path.join(destination, page_name)
-    file_folder_name = f'{path.join(destination, sanitized_name)}_files'
+    logging.debug('Page name: %s', page_name)
+
+    page_path = path.join(destination, page_name)
+    logging.debug('Page path: %s', page_path)
+
+    file_folder_name = f'{sanitized_name}_files'
+    logging.debug('Files folder name: %s', file_folder_name)
+
+    file_folder_path = path.join(destination, file_folder_name)
+    logging.debug('File folder path: %s', file_folder_path)
 
     resources = []
 
@@ -42,21 +43,21 @@ def process_page(html, url, destination):
         source = RESOURCE_ELEMENTS_ATTRIBUTES_MAP[element.name]
         source_link = element.get(source)
         absolut_source_link = urljoin(url, source_link)
+
         link_path, extension = path.splitext(
             f'{urlparse(absolut_source_link).path}')
 
-        local_link = f'{file_folder_name}/' \
-                     f'{_sanitize_string(_cut_string(link_path))}' \
-                     f'{extension}'
+        file_name = f'{_sanitize_string(link_path)[:100]}' \
+                    f'{extension}'
+        local_link = path.join(file_folder_name, file_name)
+
         element.attrs[source] = local_link
-        resources.append((absolut_source_link, local_link))
-        logger.debug('Resource - %s added with local link - %s ',
-                     absolut_source_link,
-                     local_link)
+        resource_local_path = path.join(destination, local_link)
+        resources.append((absolut_source_link, resource_local_path))
 
     modified_page = soup.prettify(formatter='html5')
 
-    return modified_page, full_page_name, file_folder_name, resources
+    return modified_page, page_path, file_folder_path, resources
 
 
 def _retrieve_elements(page_url, soup, resources_to_retrieve):
@@ -69,15 +70,15 @@ def _retrieve_elements(page_url, soup, resources_to_retrieve):
         parsed_page_url = urlparse(page_url)
         parsed_source_link = urlparse(absolute_source_link)
         if not parsed_page_url.netloc == parsed_source_link.netloc:
-            logger.warning('Resource %s is external, skipping',
-                           absolute_source_link)
+            logging.warning('%s is external, skipping',
+                            absolute_source_link)
         elif parsed_source_link.path in {'', '/'}:
-            logger.warning('%s is page link, skipping ',
-                           absolute_source_link)
+            logging.warning('%s is page link, skipping ',
+                            absolute_source_link)
         else:
             resources_to_download.append(element)
-            logger.info('Resource %s added to download list',
-                        absolute_source_link)
+            logging.info('%s added to download list',
+                         absolute_source_link)
     return resources_to_download
 
 
