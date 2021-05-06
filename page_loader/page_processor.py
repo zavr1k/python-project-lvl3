@@ -83,12 +83,6 @@ def _retrieve_elements(page_url, soup, resources_to_retrieve):
     return resources_to_download
 
 
-def _cut_string(string):
-    if len(string) > 100:
-        return string[:100]
-    return string
-
-
 def _sanitize_string(string):
     return re.sub(r'[\W_]', '-', string.strip('/'))
 
