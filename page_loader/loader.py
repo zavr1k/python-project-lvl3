@@ -1,14 +1,14 @@
 import logging
 import os
+from pathlib import Path
 
 import requests
 from progress.bar import Bar
-from pathlib import Path
 
+from page_loader.page_processor import process_page
+from page_loader.request import perform_request
 from page_loader.storage import save_html_page, \
     download_file
-from page_loader.request import perform_request
-from page_loader.page_processor import process_page
 
 
 def download(url: str, destination: str) -> str:

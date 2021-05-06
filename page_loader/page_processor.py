@@ -1,8 +1,9 @@
-from bs4 import BeautifulSoup
-from urllib.parse import urlparse, urljoin
-import re
 import logging
+import re
 from os import path
+from urllib.parse import urlparse, urljoin
+
+from bs4 import BeautifulSoup
 
 RESOURCE_ELEMENTS_ATTRIBUTES_MAP = {
     'img': 'src',
