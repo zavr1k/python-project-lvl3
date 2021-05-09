@@ -106,11 +106,11 @@ def test_loader():
             file_folder = os.path.join(tempdir, 'some-ru_files')
             assert file_path.split('/')[-1] == 'some-ru.html'
 
-            assert _read_file(file_folder, 'assets-img.png', mode='rb') == \
+            assert _read_file(file_folder, 'some-ru-assets-img.png', mode='rb') == \
                    img_data
 
             assert _read_file(
-                file_folder, 'assets-application.css', mode='r') == css_data
+                file_folder, 'some-ru-assets-application.css', mode='r') == css_data
 
-            assert _read_file(file_folder, 'assets-runtime.js', mode='r') == \
+            assert _read_file(file_folder, 'some-ru-assets-runtime.js', mode='r') == \
                    js_data

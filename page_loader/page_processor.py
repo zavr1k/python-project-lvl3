@@ -45,8 +45,9 @@ def process_page(html, url, destination):
         source_link = element.get(source)
         absolut_source_link = urljoin(url, source_link)
 
+        parsed_source_link = urlparse(absolut_source_link)
         link_path, extension = path.splitext(
-            f'{urlparse(absolut_source_link).path}')
+            f'{parsed_source_link.netloc}{parsed_source_link.path}')
 
         file_name = f'{_sanitize_string(link_path)[:100]}' \
                     f'{extension}'
