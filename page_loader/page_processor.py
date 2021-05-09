@@ -49,6 +49,9 @@ def process_page(html, url, destination):
         link_path, extension = path.splitext(
             f'{parsed_source_link.netloc}{parsed_source_link.path}')
 
+        if not extension:
+            extension = '.html'
+
         file_name = f'{_sanitize_string(link_path)[:100]}' \
                     f'{extension}'
         local_link = path.join(file_folder_name, file_name)
