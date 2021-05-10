@@ -23,11 +23,11 @@ def download(url: str, destination: str) -> str:
     number_of_resources = len(resources)
 
     logging.debug('Resources list (%s): \n%s', number_of_resources,
-                  '\n\n'.join([
-                      f'url: {resource_url} '
-                      f'\ndestination: {resource_destination}'
-                      for resource_url, resource_destination in resources
-                    ]))
+                  '\n\n'.join(
+                      [f'url: {resource_url} '
+                       f'\ndestination: {resource_destination}'
+                       for resource_url, resource_destination in resources]
+                  ))
 
     with Bar('Processing', max=number_of_resources + 1) as bar:
 
