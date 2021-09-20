@@ -1,5 +1,5 @@
 # Page-loader
-It is a console utility for downloading web pages.
+It is a console utility for downloading html pages.
 
 ### Test statuses:
 [![Project check](https://github.com/zavr1k/python-project-lvl3/actions/workflows/project-check.yml/badge.svg?branch=main)](https://github.com/zavr1k/python-project-lvl3/actions/workflows/project-check.yml)
