@@ -60,7 +60,7 @@ def process_page(html, url, destination):
         resource_local_path = path.join(destination, local_link)
         resources.append((absolut_source_link, resource_local_path))
 
-    modified_page = soup.prettify(formatter='html5')
+    modified_page = soup.prettify()
 
     return modified_page, page_path, file_folder_path, resources
 
