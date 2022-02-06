@@ -1,9 +1,9 @@
 install:
 		poetry install
 package-install:
-		pip install dist/*.whl
+		poetry run python -m pip install dist/*.whl
 package-uninstall:
-		pip uninstall hexlet-code
+		poetry run python -m pip uninstall hexlet-code
 build:
 		poetry build
 lint:
