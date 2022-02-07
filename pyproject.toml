@@ -8,10 +8,11 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 requests = "^2.25.1"
 beautifulsoup4 = "^4.9.3"
 progress = "^1.5"
+aiohttp = "^3.8.1"
 
 [tool.poetry.dev-dependencies]
 requests-mock = "^1.8.0"
